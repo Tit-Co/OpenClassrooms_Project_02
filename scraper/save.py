@@ -1,8 +1,4 @@
 import csv
-import os
-from os import mkdir
-from pathlib import Path
-
 
 def save_to_csv(url, datas):
     """Function to save datas into csv file. The file is created if not existing.
