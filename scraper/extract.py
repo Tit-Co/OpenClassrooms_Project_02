@@ -98,7 +98,98 @@ def extract_data(url):
     # Extraction of image url
     img_tag = soup.find('img', attrs={'alt': all_datas['title']})
     img_url = img_tag['src']
-    all_datas['img_url'] = img_url
+    all_datas['image_url'] = img_url
 
 
     return all_datas
+
+
+def extract_url_from_category(url, category):
+
+    page = requests.get(url)
+
+    if page.status_code != 200:
+        print(f"Error: {page.status_code}")
+        return None
+
+    soup = BeautifulSoup(page.content, 'html.parser')
+
+    # Extraction of urls
+    all_a = soup.find_all('a')
+
+    category_url=""
+
+    for a in all_a:
+        href = a.get('href')
+        if category.lower() in href and "category" in href:
+            category_url = href
+            break
+
+    return url + category_url
+
+
+def get_page_number(soup):
+
+    page_number = 0
+    li = soup.find('li', class_='current')
+    if li == None:
+        page_number = 1
+    else:
+        li_lst = li.string.split()
+        for el in li_lst:
+            if el == " " or el == "\n":
+                li_lst.remove(el)
+        page_number = int(li_lst[-1])
+    return page_number
+
+
+
+def extract_urls_from_category(url, category):
+    print("Extracting urls from category...")
+    category_url = extract_url_from_category(url, category)
+
+    page = requests.get(category_url)
+
+    if page.status_code != 200:
+        print(f"Error: {page.status_code}")
+        return None
+
+    soup = BeautifulSoup(page.content, 'html.parser')
+
+    page_number = get_page_number(soup)
+
+    current_page = 1
+
+    all_products_relative_urls = []
+
+    while current_page <= page_number :
+
+        page = requests.get(category_url)
+
+        if page.status_code != 200:
+            print(f"Error: {page.status_code}")
+            return None
+
+        soup = BeautifulSoup(page.content, 'html.parser')
+
+        all_articles = soup.find_all('article', class_='product_pod')
+
+        for article in all_articles:
+            article_href = article.find('a').get('href')
+
+            all_products_relative_urls.append(article_href)
+
+        current_page += 1
+
+        page_suffix = f"page-{current_page}.html"
+        base_url = category_url.rsplit('/', 1)[0] + '/'  # remove 'index.html'
+        category_url = base_url + page_suffix
+
+        all_products_absolute_urls = []
+        for url in all_products_relative_urls:
+            url_absolute = url.replace("../../../", "https://books.toscrape.com/catalogue/")
+
+            all_products_absolute_urls.append(url_absolute)
+
+    return all_products_absolute_urls
+

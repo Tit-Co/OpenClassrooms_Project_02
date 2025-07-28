@@ -11,8 +11,9 @@ def transform_data(datas):
     """
 
     # Transform image url
+    new_datas = datas
     product_url = datas["product_page_url"]
-    img_url = datas["img_url"]
+    img_url = datas["image_url"]
 
     img_url_root = Path(product_url).parent.parent.parent
 
@@ -20,8 +21,7 @@ def transform_data(datas):
 
     absolute_img_url = img_url_root / transformed_img_url
 
-    datas["img_url"] = absolute_img_url
-
+    new_datas["image_url"] = absolute_img_url
 
     # Transform prices into floats
     pet = datas['price_excluding_tax']
@@ -30,8 +30,8 @@ def transform_data(datas):
     float_pet = float(pet.split('£')[1])
     float_pit = float(pit.split('£')[1])
 
-    datas['price_excluding_tax'] = float_pet
-    datas['price_including_tax'] = float_pit
+    new_datas['price_excluding_tax'] = float_pet
+    new_datas['price_including_tax'] = float_pit
 
 
     # Transform product availability into integer
@@ -40,6 +40,6 @@ def transform_data(datas):
     availability_list = availability_str.split('(')
     availability_num = int(availability_list[1][0])
 
-    datas['number_available'] = availability_num
+    new_datas['number_available'] = availability_num
 
-    return datas
+    return new_datas

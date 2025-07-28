@@ -1,6 +1,6 @@
 import csv
 
-def save_to_csv(url, datas):
+def save_to_csv(url, datas, write_header=False):
     """Function to save datas into csv file. The file is created if not existing.
 
     Args:
@@ -20,14 +20,13 @@ def save_to_csv(url, datas):
               "review_rating",
               "image_url"]
 
+    mode = 'w' if write_header else 'a'
+
     # Open the file in exclusive writing mode
-    try:
-        with open(url, 'x', newline='', encoding='utf-8') as csv_file:
-            writer = csv.writer(csv_file, delimiter=',')
+    with open(url, mode, newline='', encoding='utf-8') as csv_file:
+        writer = csv.writer(csv_file)
+
+        if write_header:
             writer.writerow(header)
 
-            # List comprehension for datas values
-            writer.writerow([datas.get(key, "") for key in header])
-
-    except FileExistsError:
-        print("✅ File already exists")
+        writer.writerow([datas.get(key, "") for key in header])
