@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from urllib.parse import urljoin
 
 def extract_data(url):
     """Function that extracts datas from url.
@@ -29,6 +30,7 @@ def extract_data(url):
 
     # Extraction of product title
     title = soup.find('li', class_='active').string
+    print(f"  ▷▷ {title} \n")
     all_datas['title'] = title
 
 
@@ -104,8 +106,16 @@ def extract_data(url):
     return all_datas
 
 
-def extract_url_from_category(url, category):
+def extract_category_url(url, category):
+    """Function that extracts the absolute url of a given category from the given html page
 
+    Args:
+        url (string): The html page url
+        category (string): The category name
+
+    Returns:The absolute url of the specified category
+
+    """
     page = requests.get(url)
 
     if page.status_code != 200:
@@ -115,21 +125,28 @@ def extract_url_from_category(url, category):
     soup = BeautifulSoup(page.content, 'html.parser')
 
     # Extraction of urls
-    all_a = soup.find_all('a')
 
-    category_url=""
+    category_links = soup.select("ul.nav.nav-list ul li a")
 
-    for a in all_a:
-        href = a.get('href')
-        if category.lower() in href and "category" in href:
-            category_url = href
-            break
+    for link in category_links:
+        category_name = link.text.strip()
+        href = link.get("href")
 
-    return url + category_url
+        if category_name.lower() == category.lower():
+            return urljoin(url, href)
+
+    raise ValueError(f"Category '{category}' not found.")
 
 
 def get_page_number(soup):
+    """Function that gets the page number of the given soup
 
+    Args:
+        soup (BeautifulSoup): The content
+
+    Returns: The number of page of the given soup
+
+    """
     page_number = 0
     li = soup.find('li', class_='current')
     if li == None:
@@ -143,12 +160,16 @@ def get_page_number(soup):
     return page_number
 
 
+def get_all_categories(url):
+    """ Function that gets all category names from the given url
 
-def extract_urls_from_category(url, category):
-    print("Extracting urls from category...")
-    category_url = extract_url_from_category(url, category)
+    Args:
+        url (string): The url of the index page
 
-    page = requests.get(category_url)
+    Returns: The list of all category names
+
+    """
+    page = requests.get(url)
 
     if page.status_code != 200:
         print(f"Error: {page.status_code}")
@@ -156,11 +177,38 @@ def extract_urls_from_category(url, category):
 
     soup = BeautifulSoup(page.content, 'html.parser')
 
+    category_links = soup.select("ul.nav.nav-list ul li a")
+
+    return [link.text.strip() for link in category_links]
+
+
+def extract_books_urls_from_category(url, category):
+    """Function that extracts all the urls (all books pages) in a given category from the given html page
+
+    Args:
+        url (string): The html page url
+        category (string): The category name
+
+    Returns:The list of urls extracted from the given category
+
+    """
+
+    print("▻ Extracting urls from category...")
+    category_url = extract_category_url(url, category)
+
+    page = requests.get(category_url)
+
+    if page.status_code != 200:
+        print(f"Error: {page.status_code}")
+        return []
+
+    soup = BeautifulSoup(page.content, 'html.parser')
+
     page_number = get_page_number(soup)
 
     current_page = 1
 
-    all_products_relative_urls = []
+    all_books_with_category = []
 
     while current_page <= page_number :
 
@@ -168,7 +216,7 @@ def extract_urls_from_category(url, category):
 
         if page.status_code != 200:
             print(f"Error: {page.status_code}")
-            return None
+            return []
 
         soup = BeautifulSoup(page.content, 'html.parser')
 
@@ -176,20 +224,13 @@ def extract_urls_from_category(url, category):
 
         for article in all_articles:
             article_href = article.find('a').get('href')
-
-            all_products_relative_urls.append(article_href)
+            url_absolute = article_href.replace("../../../", "https://books.toscrape.com/catalogue/")
+            all_books_with_category.append((url_absolute, category))
 
         current_page += 1
-
         page_suffix = f"page-{current_page}.html"
         base_url = category_url.rsplit('/', 1)[0] + '/'  # remove 'index.html'
         category_url = base_url + page_suffix
 
-        all_products_absolute_urls = []
-        for url in all_products_relative_urls:
-            url_absolute = url.replace("../../../", "https://books.toscrape.com/catalogue/")
 
-            all_products_absolute_urls.append(url_absolute)
-
-    return all_products_absolute_urls
-
+    return all_books_with_category

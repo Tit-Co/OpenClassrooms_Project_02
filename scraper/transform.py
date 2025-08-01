@@ -1,7 +1,99 @@
-from pathlib import Path, PurePosixPath
+from unidecode import unidecode
+import re
+from urllib.parse import urljoin
+
+
+def remove_accents(text):
+    """Functions that removes accents from a string.
+
+    Args:
+        text (string): Text to be cleaned.
+
+    Returns: The cleaned string
+    """
+    return unidecode(text)
+
+
+
+def clean_spaces(text):
+    """Function that cleans all types of spaces from a string
+
+    Args:
+        text (string): Text to be cleaned.
+
+    Returns:The cleaned string
+
+    """
+    return re.sub(r'\s+', '_', text)
+
+
+
+def clean_filename(name):
+    """Function that cleans a filename from a string and limit it to 100 characters.
+
+    Args:
+        name (string): Filename to be cleaned.
+
+    Returns: The cleaned filename
+
+    """
+    # Remove accents
+    name = remove_accents(name)
+
+    # Replace space and + by dash, and remove "!", "(", ")", "[", "]", "#", "%"
+    name = name.replace(" ", "-")
+    name = name.replace("+", "-")
+    name = name.replace("!", "")
+    name = name.replace('&', 'and')
+    name = name.replace('[', '').replace(']', '')
+    name = name.replace('(', '').replace(')', '')
+    name = name.replace("#", "")
+    name = name.replace("%", "percent")
+
+    # Remove coma and dot
+    name = name.replace(",", "")
+    name = name.replace(".", "")
+
+    # Remove prohibited characters and replace by a dash
+    name = re.sub(r'[\\/*?:"<>|]', "-", name)
+
+    # Replace apostrophe and quotation marks
+    apostrophes = ["'", "’", "‘", "`", "´"]
+    quotation_marks = [
+    "'",
+    "‘",
+    "’",
+    "‚",
+
+    '"',
+    "“",
+    "”",
+    "„",
+    "‟",
+
+    "«",
+    "»",
+]
+
+    for a in apostrophes:
+        name = name.replace(a, "-")
+
+    for q in quotation_marks:
+        name = name.replace(q, "-")
+
+    # Remove double occurrence of dash
+    name = re.sub(r'-+', "-", name)
+
+    # Remove dash at the end if exists
+    name = name.rstrip("-")
+
+    # Limit the length to avoid runtime error
+    return name[:100]
+
+
 
 def transform_data(datas):
-    """Function that transforms data from the dictionary get after extraction
+    """Function that transforms data from the dictionary got after extraction
 
     Args:
         datas (dict): Dictionary of datas
@@ -13,15 +105,15 @@ def transform_data(datas):
     # Transform image url
     new_datas = datas
     product_url = datas["product_page_url"]
-    img_url = datas["image_url"]
+    img_relative_url = datas["image_url"]  # ex: "../../media/cache/...jpg"
 
-    img_url_root = Path(product_url).parent.parent.parent
 
-    transformed_img_url = PurePosixPath(img_url).relative_to("..", "..")
-
-    absolute_img_url = img_url_root / transformed_img_url
+    # Create absolute image URL
+    absolute_img_url = urljoin(product_url, img_relative_url)
 
     new_datas["image_url"] = absolute_img_url
+
+
 
     # Transform prices into floats
     pet = datas['price_excluding_tax']
