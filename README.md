@@ -63,7 +63,7 @@ source env/bin/activate
 Or  
 source env\Scripts\activate on Windows  
 
-**-Install dependencies**
+**-Install dependencies**  
 pip install -r requirements.txt  
 or  
 uv run python   
