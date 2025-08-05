@@ -105,7 +105,10 @@ def transform_data(datas):
     # Transform image url
     new_datas = datas
     product_url = datas["product_page_url"]
-    img_relative_url = datas["image_url"]  # ex: "../../media/cache/...jpg"
+    # ex.: "https://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html"
+
+    img_relative_url = datas["image_url"]
+    # ex.: "../../media/cache/6d/41/6d418a73cc7d4ecfd75ca11d854041db.jpg"
 
 
     # Create absolute image URL
@@ -130,7 +133,7 @@ def transform_data(datas):
     availability_str = datas['number_available']
 
     availability_list = availability_str.split('(')
-    availability_num = int(availability_list[1][0])
+    availability_num = int(availability_list[1].split(" ")[0])
 
     new_datas['number_available'] = availability_num
 
