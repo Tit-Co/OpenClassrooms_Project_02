@@ -35,16 +35,18 @@ def extract_data(url):
 
 
     # Extraction of product category
-    all_li = soup.find_all('li')
-    a_list2 = []
-    for li in all_li:
-        a_list = li.find_all('a')
-        for a in a_list:
-            if a.string=='Home' or a.string=='Books' or a.string==None:
-                continue
-            else:
-                a_list2.append(a.string)
-    category = a_list2[0]
+    breadcrumb = soup.select_one("ul.breadcrumb")
+    if breadcrumb:
+        a_list = breadcrumb.find_all("a")
+        category_links = [
+            a.get_text(strip=True)
+            for a in a_list
+            if a.string and a.string not in ('Home', 'Books')
+        ]
+        category = category_links[0] if category_links else "Unknown"
+    else:
+        category = "Unknown"
+
     all_datas['category'] = category
 
 
