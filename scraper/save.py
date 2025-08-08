@@ -1,6 +1,6 @@
 import csv
 import requests
-
+from pathlib import Path
 
 def download_image(url_img, file_path, errors_log, skipped_images):
     """Function that downloads an image from a url and saves it in the given path.
@@ -42,13 +42,12 @@ def download_image(url_img, file_path, errors_log, skipped_images):
 
 
 
-def save_to_csv(url, datas, write_header=False):
+def save_to_csv(url, datas):
     """Function to save datas into csv file. The file is created if not existing.
 
     Args:
         url (str): The url to save csv file
         datas (dict): The product page datas in a dictionary
-        write_header (bool, optional): Whether to write the header of the csv file. Defaults to False.
     """
 
     # Sorted product datas
@@ -63,13 +62,21 @@ def save_to_csv(url, datas, write_header=False):
               "review_rating",
               "image_url"]
 
-    mode = 'w' if write_header else 'a'
 
-    # Open the file in exclusive writing mode
-    with open(url, mode, newline='', encoding='utf-8') as csv_file:
+    file_path = Path(url)
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # verify if file path exists or not and declare boolean accordingly
+    write_header = not file_path.exists()
+
+    # Open the file in 'append' writing mode
+    with open(url, "a", newline='', encoding='utf-8') as csv_file:
         writer = csv.writer(csv_file)
 
+        # if file doesn't exist, file is created and header is written
         if write_header:
             writer.writerow(header)
-
+        
         writer.writerow([datas.get(key, "") for key in header])
+
+

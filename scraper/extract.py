@@ -2,12 +2,13 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
-def extract_data(url):
+def extract_data(url, errors_log):
     """Function that extracts datas from url.
     The given url represents a product page i.e. a book page
 
     Args:
         url (string): The product page url
+        errors_log (logging.Logger): A logging logger
 
     Returns: The extracted datas dictionary
 
@@ -35,17 +36,23 @@ def extract_data(url):
 
 
     # Extraction of product category
-    all_li = soup.find_all('li')
-    a_list2 = []
-    for li in all_li:
-        a_list = li.find_all('a')
-        for a in a_list:
-            if a.string=='Home' or a.string=='Books' or a.string==None:
-                continue
-            else:
-                a_list2.append(a.string)
-    category = a_list2[0]
-    all_datas['category'] = category
+    # If category not extracted correctly, an exception is raised
+    try:
+        breadcrumb = soup.select_one("ul.breadcrumb")
+        a_list = breadcrumb.find_all("a")
+        category_links = [
+            a.get_text(strip=True)
+            for a in a_list
+            if a.string and a.string not in ('Home', 'Books')
+        ]
+        category = category_links[0]
+
+        all_datas['category'] = category
+
+    except Exception as e:
+        print(f"Error: unknown category ! → {e}\n")
+        errors_log.append(("unknown category",str(e)))
+
 
 
     # Extraction of universal product code, prices and availability

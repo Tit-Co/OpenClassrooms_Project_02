@@ -72,8 +72,7 @@ def clean_filename(name):
     "‟",
 
     "«",
-    "»",
-]
+    "»"]
 
     for a in apostrophes:
         name = name.replace(a, "-")

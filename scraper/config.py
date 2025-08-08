@@ -6,14 +6,12 @@ import os
 index_url = "https://books.toscrape.com/"
 
 # CSV file
-csv_file = "./data/books.csv"
-csv_path = Path(csv_file)
-if not csv_path.exists():
-    csv_path.touch()
+csv_file = ""
+
 
 # Errors list and path
-image_errors = []
-errors_path = Path("./data/image_download_errors.txt")
+exec_errors = []
+errors_path = Path("./data/exec_errors.txt")
 errors_path.parent.mkdir(parents=True, exist_ok=True)
 
 # Skipped images list and path
