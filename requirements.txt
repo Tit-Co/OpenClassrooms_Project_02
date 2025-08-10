@@ -11,4 +11,4 @@ soupsieve==2.7
 typing_extensions==4.14.1
 Unidecode==1.4.0
 urllib3==2.5.0
-uv==0.8.4
+uv==0.8.6
