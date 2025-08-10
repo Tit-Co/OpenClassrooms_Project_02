@@ -2,6 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
+def display_book(book):
+    print(f"\n▻ Book \"{book}\" saved\n")
+
 def extract_data(url, errors_log):
     """Function that extracts datas from url.
     The given url represents a product page i.e. a book page
@@ -31,7 +34,9 @@ def extract_data(url, errors_log):
 
     # Extraction of product title
     title = soup.find('li', class_='active').string
-    print(f"  ▷▷ {title} \n")
+
+    display_book(title)
+
     all_datas['title'] = title
 
 

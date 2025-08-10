@@ -11,19 +11,19 @@ csv_file = ""
 
 # Errors list and path
 exec_errors = []
-errors_path = Path("./data/exec_errors.txt")
+errors_path = Path("../data/exec_errors.txt")
 errors_path.parent.mkdir(parents=True, exist_ok=True)
 
 # Skipped images list and path
 skipped_images = []
-skipped_images_path = Path("./data/skipped_images.txt")
+skipped_images_path = Path("../data/skipped_images.txt")
 skipped_images_path.parent.mkdir(parents=True, exist_ok=True)
 
 # Remove folders and files if exist
-data_dir = Path("./data/images/")
+data_dir = Path("../data/images/")
 if data_dir.exists():
     shutil.rmtree(data_dir)
-print("🧹 Dossier ./data/images/ supprimé.")
+print("🧹 Dossier ../data/images/ supprimé.")
 
 if errors_path.exists():
     os.remove(errors_path)

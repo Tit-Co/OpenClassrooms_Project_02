@@ -10,21 +10,25 @@ def display_category(cat):
     c = "┈" * int((35 - n) / 2)
     l = "┈" * 60
     print(l)
-    print(c + " PROCESSING CATEGORY ⯈⯈ " + cat + " " + c)
+    print(f"{c} PROCESSING CATEGORY ⯈⯈ \"{cat}\" {c}")
     print(l)
 
-def display_category_end(cat, count):
-    print(f"\n▻ Total books scraped for category {cat} : {count}")
-    print(f"\n▻ Category {cat} saved to {csv_file}\n\n")
+def display_category_end(cat, count, total_count):
+    print(f"\n▻ Total books scraped for category \"{cat}\" : {count} / {total_count}")
+    print(f"\n▻ Category {cat} saved to : {csv_file}\n\n")
     print("─" * 60 + "\n")
 
-
+def display_books_urls(books_list):
+    print("▻▻ List of extracted books urls :\n")
+    for book in books_list:
+        print(f"{book[0]}\n")
+    print("\n")
 
 def scraper(url):
 
     all_categories = get_all_categories(url)
     print(f"All categories extracted from {url}\n")
-
+    total_books_count = 0
     for category in all_categories:
         display_category(category)
 
@@ -39,14 +43,14 @@ def scraper(url):
 
         # Extraction of all pages URL of a category
         book_urls_with_category = extract_books_urls_from_category(url, category)
-        print(f"▻ Extracted urls : {book_urls_with_category}\n")
+        display_books_urls(book_urls_with_category)
 
         book_count = 0
         # Loop for scraping all products url of the category example
         for book_url, cat in book_urls_with_category:
 
             # Extraction of datas from the product page url
-            print("├ Extraction...🚧\n")
+            print("├ Extraction...🚧")
             extracted_datas = extract_data(book_url,exec_errors)
 
             # Transformation of datas
@@ -73,8 +77,8 @@ def scraper(url):
             download_image(image_url, image_path, exec_errors, skipped_images)
 
             book_count += 1
-
-        display_category_end(category, book_count)
+        total_books_count += book_count
+        display_category_end(category, book_count, total_books_count)
 
     # Logging files
     if exec_errors:
@@ -93,4 +97,5 @@ def scraper(url):
 
     else:
         message = "\n\n🙁"
-    print(f"{message} Download completed with {len(exec_errors)} error(s).")
+    print(f"{message} Download completed with {len(exec_errors)} error(s).\n")
+    print(f"Total books scraped : {total_books_count}\n")
