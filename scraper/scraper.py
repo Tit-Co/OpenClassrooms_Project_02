@@ -1,4 +1,5 @@
-from scraper.config import csv_file, exec_errors, skipped_images, errors_path, skipped_images_path
+from scraper.config import csv_file, exec_errors, skipped_images, errors_path, skipped_images_path, my_book, \
+    my_category, my_library
 from scraper.extract import get_all_categories, extract_books_urls_from_category, extract_data
 from scraper.transform import transform_data, clean_spaces, clean_filename
 from scraper.save import save_to_csv, download_image
@@ -61,23 +62,36 @@ def scraper(url):
             save_to_csv(csv_file, transformed_datas)
             print("├ Saving to CSV file...💾")
 
-            # Downloading image
             title = transformed_datas["title"]
             category = clean_spaces(cat)
             upc = transformed_datas["universal_product_code"]
             base = f"./data"
             image_url = transformed_datas['image_url']
+            price = transformed_datas['price_including_tax']
+            availability = transformed_datas['number_available']
 
             safe_title = clean_spaces(clean_filename(title))
             image_name = f"{safe_title}_{upc}.jpg"
 
+
+            my_book.title = extracted_datas["title"]
+            my_book.category = cat
+            my_book.url = book_url
+            my_book.price = price
+            my_book.availability = availability
+
+
+            # Downloading image
             image_dir = Path(base) / category / Path("images")
             image_path = image_dir / image_name
-
             download_image(image_url, image_path, exec_errors, skipped_images)
+
+            my_book.image = image_path
+            my_category.add_book(my_book)
 
             book_count += 1
         total_books_count += book_count
+        my_library.add_category(category)
         display_category_end(category, book_count, total_books_count)
 
     # Logging files

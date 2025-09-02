@@ -1,6 +1,7 @@
 from pathlib import Path
 import shutil
 import os
+from scraper.models import Book, Category, Library
 
 # Index page url
 index_url = "https://books.toscrape.com/"
@@ -8,6 +9,10 @@ index_url = "https://books.toscrape.com/"
 # CSV file
 csv_file = ""
 
+# Book, Category and Library objects
+my_book = Book("","","",0.0,0, "")
+my_category = Category("",[])
+my_library = Library([])
 
 # Errors list and path
 exec_errors = []

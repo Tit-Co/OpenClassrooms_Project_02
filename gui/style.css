@@ -1,0 +1,158 @@
+QWidget#main_window {
+    background-color: lightgray;
+}
+
+QApplication {
+    background: #FFFFFF;
+}
+
+QLabel#title_label {
+    background-color: #FFFFFF;
+    color: black;
+    font-size: 18px;
+    border-radius: 8px;
+    padding: 10px;
+    border: 0px solid darkgray;
+}
+
+
+QPushButton#title_response_label {
+    background-color: transparent;
+    color: black;
+    font-size: 18px;
+    border-radius: 8px;
+    padding: 10px;
+}
+QPushButton#title_response_label:hover {
+    background-color: transparent;
+    color: blue;
+    font-size: 18px;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+
+QLabel#cat_label {
+    background-color: #FFFFFF;
+    color: black;
+    font-size: 18px;
+    border-radius: 8px;
+    padding: 10px;
+    border: 0px solid darkgray;
+}
+
+QLabel#cat_response_label {
+    background-color: transparent;
+    color: black;
+    font-size: 18px;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+QLabel#book_url_label {
+    background-color: #FFFFFF;
+    color: black;
+    font-size: 18px;
+    border-radius: 8px;
+    padding: 10px;
+    border: 0px solid darkgray;
+}
+QLabel#book_label {
+    background-color: #FFFFFF;
+    color: black;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid darkgray;
+}
+QLabel#book_price_label {
+    background-color: #FFFFFF;
+    color: black;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid darkgray;
+}
+QLabel#book_availability_label {
+    background-color: #FFFFFF;
+    color: black;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid darkgray;
+}
+QLabel#label_log {
+    background-color: #FFFFFF;
+    color: black;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+QLabel {
+    background-color: transparent;
+    color: cornflowerblue;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+QListWidget {
+    background-color: transparent;
+    color: black;
+    font-size: 10px;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid darkgray;
+}
+
+QTextEdit {
+    background-color: transparent;
+    color: black;
+    font-size: 10px;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid darkgray;
+}
+
+QPushButton#btn_start{
+    background-color: #FFFFFF;
+    color: black;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid darkgray
+}
+
+QPixmap{
+    border: 1px solid darkgray
+}
+
+QPushButton#btn_start:hover{
+    background-color: lightslategray;
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid darkgray;
+    font-weight: bold;
+}
+
+QFrame#mySeparator1 {
+    color: darkgray;
+}
+QFrame#mySeparator2 {
+    color: darkgray;
+}
+QFrame#mySeparator3 {
+    color: darkgray;
+}
+QFrame#mySeparator4 {
+    color: darkgray;
+}
+QFrame#mySeparator5 {
+    color: darkgray;
+}
+QFrame#mySeparator6 {
+    color: darkgray;
+}
