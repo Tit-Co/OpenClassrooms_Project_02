@@ -18,7 +18,7 @@ The website contains 1000 books across 50 categories.
 
 ## PROJECT STRUCTURE
 
-![Folders and files structure](./structure.jpg)  
+![Folders and files structure](./structure.png)  
 
 
 ## INSTALLATION
