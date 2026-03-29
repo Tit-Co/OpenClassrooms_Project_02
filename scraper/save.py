@@ -24,7 +24,7 @@ def download_image(url_img, file_path, errors_log, skipped_images):
         directory.mkdir(parents=True, exist_ok=True)
 
         print(f"➥ Image destination : {file_path}")
-        print(f"➥ Path length : {len(str(file_path))}")
+        #print(f"➥ Path length : {len(str(file_path))}")
 
         if not file_path.exists():
             with open(file_path, "wb") as fp:
@@ -34,7 +34,7 @@ def download_image(url_img, file_path, errors_log, skipped_images):
             print(f"⚠️ Image already exists : {file_path}")
             skipped_images.append(file_path)
 
-        print("═════\n")
+        print("="*60+"\n")
 
     except Exception as e:
         print(f"❌ Error for {url_img} → {e}\n")
